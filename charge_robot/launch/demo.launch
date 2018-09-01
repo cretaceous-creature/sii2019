@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <env name="GAZEBO_MODEL_PATH" value="$(find prius_description)/meshes/../.."/>
+    <arg name="verbose" value="true"/>
+    <arg name="world_name" value="$(find car_demo)/worlds/parking_robot_done.world"/>
+  </include>
+
+<!-- <group ns="prius"> -->
+<!--   <arg name="model" default="$(find prius_description)/urdf/prius.urdf"/> -->
+<!--   <param name="robot_description" textfile="$(arg model)"/> -->
+
+<!--   <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" > -->
+<!--     <param name="tf_prefix" type="string" value="/prius" /> -->
+   
+<!--   </node> -->
+<!--   <node pkg="fake_localization" type="fake_localization" name="fake_localization"> -->
+
+     <!-- <remap from="base_pose_ground_truth" to="/prius/base_pose_ground_truth"/> -->
+<!--   </node> -->
+<!--   <node pkg="tf2_ros" type="static_transform_publisher" name="very_inaccurate_odom" args="0 0 0 0 0 0 /prius/odom /prius/base_link"/> -->
+
+<!--   <node pkg="joy" type="joy_node" name="joy_node1"> -->
+<!--     <param name="dev" value="/dev/input/js1"/> -->
+<!--   </node> -->
+
+<!--   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x -98 -y -121 -z 0.5 -Y -1.66 -model prius" respawn="false" output="screen" /> -->
+<!-- </group> -->
+<!--    <node pkg="car_demo" type="ps3joystick" name="ps3joystick"/> -->
+
+<group ns="ur5">
+  <include file="$(find ur_gazebo)/launch/ur5_nogazebo.launch">
+    <arg name="limited" value="true"/>
+  </include>
+
+  <include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch">
+    <arg name="limited" value="true"/>
+  </include>
+
+  
+  <include file="$(find realsense_gazebo_plugin)/launch/depth_proc.launch" />
+</group>
+
+  <arg name="rvizconfig" default="$(find car_demo)/rviz/demo.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>
